@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import express from 'express';
+import MasterRouter from './routers/MasterRouter';
 
 // load the environment variables from the .env file
 dotenv.config({
@@ -12,10 +13,13 @@ dotenv.config({
  */
 class Server {
   public app = express();
+  public router = MasterRouter;
 }
 
 // initialize server app
 const server = new Server();
+
+server.app.use('/api', server.router);
 
 // make server listen on some port
 ((port = process.env.APP_PORT || 5000) => {
