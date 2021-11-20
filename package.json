@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-      "dev": "nodemon src/app.ts"
+    "dev": "nodemon src/server.ts"
   },
   "repository": {
     "type": "git",
@@ -19,10 +19,14 @@
   },
   "homepage": "https://github.com/121Development/filter-feed#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "youch": "^2.2.2"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/node": "^16.11.7",
     "nodemon": "^2.0.15",

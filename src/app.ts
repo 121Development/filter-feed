@@ -1,27 +1,45 @@
-import dotenv from 'dotenv';
 import express from 'express';
 import MasterRouter from './routers/MasterRouter';
+import cors from 'cors';
+import 'express-async-errors';
+import Youch from 'youch';
+import 'dotenv/config';
+require('dotenv').config()
+class App {
+  server: any;
+  constructor() {
+    this.server = express();
+    this.middlewares();
+    this.routes();
+    this.exceptionHandler();
+  }
 
-// load the environment variables from the .env file
-dotenv.config({
-  path: '.env'
-});
+  middlewares() {
+    this.server.disable('x-powered-by');
+    this.server.use(cors());
+    this.server.use(express.json());
+  }
+  
+  /**
+   * Base routes definition
+   */
+  routes() {
+    this.server.use(MasterRouter);
+  }
 
-/**
- * Express server application class.
- * @description Will later contain the routing system.
- */
-class Server {
-  public app = express();
-  public router = MasterRouter;
+  /**
+   * Default exception handler (that method prevent the app from breaking)
+   */
+  exceptionHandler() {
+    this.server.use(async (err: any, req: any, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { error: string | { message: string; name: string; status: number; frames: { file: string; filePath: string; method: string; line: number; column: number; context: { start: number; pre: string; line: string; post: string; }; isModule: boolean; isNative: boolean; isApp: boolean; }[]; }; }): any; new(): any; }; }; }, _next: any) => {
+      if (process.env.NODE_ENV === 'dev') {
+        const errors = await new Youch(err, req).toJSON();
+        return res.status(500).json(errors);
+      }
+
+      return res.status(500).json({ error: 'Internal server error' });
+    });
+  }
 }
 
-// initialize server app
-const server = new Server();
-
-server.app.use('/api', server.router);
-
-// make server listen on some port
-((port = process.env.APP_PORT || 5000) => {
-  server.app.listen(port, () => console.log(`> Listening on port ${port}`));
-})();
+export default new App().server;

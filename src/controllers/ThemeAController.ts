@@ -5,5 +5,4 @@ class ThemeAController {
       };
     }
   }
-  
   export default new ThemeAController();
